@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: Sugddeluxe
+    name: LessionMath
     runtime: python
     buildCommand: |
       pip install --upgrade pip
