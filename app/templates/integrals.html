@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block extra_head %}<link href="/static/css/module-pages.css" rel="stylesheet">{% endblock %}
+{% block content %}
+<div class="container module-layout">
+  <div class="module-hero"><h2 data-i18n="integrals.title">Интегралы</h2><p data-i18n="integrals.intro">Интеграл — накопление величины: площадь, объём, общий расход энергии.</p></div>
+  <div class="info-grid">
+    <div class="info-card"><h6 data-i18n="integrals.termTitle">Термин</h6><p class="small mb-0" data-i18n="integrals.termText">∫f(x)dx — «сумма» бесконечно малых вкладов функции.</p></div>
+    <div class="info-card"><h6 data-i18n="integrals.lifeTitle">В жизни</h6><p class="small mb-0" data-i18n="integrals.lifeText">Пробег по скорости, расход воды по потоку, накопленная прибыль — интегралы.</p></div>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-8 order-chart">
+      <div class="glass-card p-4">
+        <p class="text-muted mb-2" data-i18n="integrals.area">Площадь под графиком</p>
+        <div class="chart-container"><canvas id="integralChart"></canvas></div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="glass-card p-4">
+        <div class="btn-group w-100 mb-3">
+          <button class="btn btn-sm btn-primary active" data-integral-tab="definite" data-i18n="integrals.definite">Определённый</button>
+          <button class="btn btn-sm btn-outline-primary" data-integral-tab="indefinite" data-i18n="integrals.indefinite">Неопределённый</button>
+        </div>
+        <input type="text" class="form-control mb-2" id="expression" value="x**2">
+        <div id="formulaPad" class="formula-pad mb-3"></div>
+        <div id="definiteFields">
+          <div class="row g-2 mb-2"><div class="col-6"><label class="form-label">a</label><input type="number" class="form-control" id="a" value="0"></div><div class="col-6"><label class="form-label">b</label><input type="number" class="form-control" id="b" value="2"></div></div>
+          <select class="form-select mb-2" id="method"><option value="symbolic">Symbolic</option><option value="trapezoid">Trapezoid</option><option value="simpson">Simpson</option><option value="all">All</option></select>
+          <button class="btn btn-primary w-100" id="calcIntegralBtn" data-i18n="integrals.calculate">Вычислить</button>
+        </div>
+        <button class="btn btn-primary w-100 d-none" id="calcIndefiniteBtn" data-i18n="integrals.indefiniteCalc">Первообразная</button>
+        <div class="example-chips mt-3">
+          <button class="btn btn-sm btn-outline-primary" onclick="document.getElementById('expression').value='x**2';calculateIntegral()">x²</button>
+          <button class="btn btn-sm btn-outline-primary" onclick="document.getElementById('expression').value='sin(x)';calculateIntegral()">sin</button>
+          <button class="btn btn-sm btn-outline-primary" onclick="document.getElementById('expression').value='1/x';calculateIntegral()">1/x</button>
+        </div>
+        <div id="integralResult" class="mt-3"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}<script src="/static/js/integrals.js"></script>{% endblock %}

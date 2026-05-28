@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container mb-5">
+  <div class="hero-section" data-aos="fade-up">
+    <div class="row align-items-center position-relative">
+      <div class="col-lg-7">
+        <h1 class="display-4 fw-bold mb-3" data-i18n="home.hero.title">Визуальное изучение математического анализа</h1>
+        <p class="lead mb-4 opacity-90" data-i18n="home.hero.subtitle">Интерактивные графики, производные, интегралы и обучение в одной платформе</p>
+        <a href="/learning" class="btn btn-light btn-lg px-4" data-i18n="home.hero.cta">Начать обучение</a>
+      </div>
+      <div class="col-lg-5 d-none d-lg-block">
+        <canvas id="heroChart" class="animated-graph-canvas" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container mb-5">
+  <div class="row g-4">
+    <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+      <div class="glass-card feature-card">
+        <div class="feature-icon"><i class="bi bi-graph-up"></i></div>
+        <h5 data-i18n="home.features.graphs">Построение графиков</h5>
+        <p class="text-muted" data-i18n="home.features.graphs.desc">Вводите функции и визуализируйте их поведение</p>
+        <a href="/graphs" class="btn btn-sm btn-primary">→</a>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+      <div class="glass-card feature-card">
+        <div class="feature-icon"><i class="bi bi-slash-lg"></i></div>
+        <h5 data-i18n="home.features.derivatives">Производные</h5>
+        <p class="text-muted" data-i18n="home.features.derivatives.desc">Касательные, пошаговые решения</p>
+        <a href="/derivatives" class="btn btn-sm btn-primary">→</a>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+      <div class="glass-card feature-card">
+        <div class="feature-icon"><i class="bi bi-stack"></i></div>
+        <h5 data-i18n="home.features.integrals">Интегралы</h5>
+        <p class="text-muted" data-i18n="home.features.integrals.desc">Площадь под графиком</p>
+        <a href="/integrals" class="btn btn-sm btn-primary">→</a>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
+      <div class="glass-card feature-card">
+        <div class="feature-icon"><i class="bi bi-mortarboard"></i></div>
+        <h5 data-i18n="home.features.learning">Интерактивное обучение</h5>
+        <p class="text-muted" data-i18n="home.features.learning.desc">Тесты и достижения</p>
+        <a href="/learning" class="btn btn-sm btn-primary">→</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const data = await API.post('/api/math/plot', { expression: 'sin(x)*cos(x)', x_min: -6.28, x_max: 6.28 });
+    ChartHelper.createLineChart('heroChart', [
+      ChartHelper.datasetFromXY(data.x, data.y, 'f(x)', 'rgba(255,255,255,0.9)')
+    ], { animate: true, chartOptions: {
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: 'rgba(255,255,255,0.7)' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+        y: { ticks: { color: 'rgba(255,255,255,0.7)' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+      }
+    }});
+  } catch(e) {}
+});
+</script>
+{% endblock %}

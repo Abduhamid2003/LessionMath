@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h2 class="mb-4" data-i18n="profile.title">Профиль</h2>
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="glass-card p-4 text-center" id="userCard"></div>
+      <div class="glass-card p-4 mt-4">
+        <h5 data-i18n="profile.achievements">Достижения</h5>
+        <div id="achievementsList"></div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="glass-card p-4 mb-4">
+        <h5 data-i18n="profile.progress">Прогресс</h5>
+        <div id="progressSummary"></div>
+      </div>
+      <div class="glass-card p-4 mb-4">
+        <h5 data-i18n="profile.history">История вычислений</h5>
+        <div id="historyList"></div>
+      </div>
+      <div class="glass-card p-4">
+        <h5 data-i18n="profile.favorites">Избранные формулы</h5>
+        <div id="favoritesList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  if (!Auth.token) { window.location.href = '/login'; return; }
+  const u = Auth.user;
+  document.getElementById('userCard').innerHTML = `
+    <div class="display-6 mb-2"><i class="bi bi-person-circle"></i></div>
+    <h4>${u.full_name || u.username}</h4>
+    <p class="text-muted">${u.email}</p>
+    <span class="badge bg-primary">${u.role}</span>
+    <button class="btn btn-outline-danger btn-sm mt-3 w-100" onclick="Auth.logout()">Logout</button>`;
+
+  const achievements = await API.get('/api/achievements/me');
+  document.getElementById('achievementsList').innerHTML = achievements.map(a => `
+    <div class="d-flex align-items-center gap-2 mb-2 ${a.earned ? '' : 'opacity-50'}">
+      <i class="bi bi-trophy${a.earned ? '-fill text-warning' : ''}"></i>
+      <div><strong>${I18n.field(a, 'title')}</strong><br><small>${I18n.field(a, 'description')}</small></div>
+    </div>`).join('');
+
+  const progress = await API.get('/api/progress/me');
+  document.getElementById('progressSummary').innerHTML = `
+    <p>${I18n.t('profile.calcCount')}: <strong>${progress.calculations_count}</strong></p>
+    <p>${I18n.t('profile.avgScore')}: <strong>${progress.avg_test_percentage}%</strong></p>
+    <ul class="list-unstyled">${(progress.tests || []).map(t =>
+      `<li class="border-bottom py-1">${I18n.field(t, 'title')} — ${t.percentage}%</li>`).join('') || '<li class="text-muted">—</li>'}</ul>`;
+
+  const history = await API.get('/api/formulas/history');
+  document.getElementById('historyList').innerHTML = history.length
+    ? history.map(h => `<div class="border-bottom py-2"><strong>${h.operation_type}</strong>: ${h.input} → ${h.result}</div>`).join('')
+    : '<p class="text-muted">—</p>';
+  const favs = await API.get('/api/formulas/favorites');
+  document.getElementById('favoritesList').innerHTML = favs.length
+    ? favs.map(f => `<span class="badge bg-secondary me-1">${f.expression}</span>`).join('')
+    : '<p class="text-muted">—</p>';
+});
+</script>
+{% endblock %}

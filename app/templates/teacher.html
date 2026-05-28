@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h2 class="mb-4" data-i18n="teacher.dashboard">Кабинет преподавателя</h2>
+
+  <ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+      <button type="button" class="nav-link active" data-teacher-tab="lessons" data-i18n="learning.lessons">Уроки</button>
+    </li>
+    <li class="nav-item">
+      <button type="button" class="nav-link" data-teacher-tab="tests" data-i18n="learning.tests">Тесты</button>
+    </li>
+    <li class="nav-item">
+      <button type="button" class="nav-link" data-teacher-tab="classes" data-i18n="teacher.classes">Классы</button>
+    </li>
+  </ul>
+
+  <!-- Уроки -->
+  <div data-teacher-panel="lessons">
+    <div class="row g-4">
+      <div class="col-lg-5">
+        <div class="glass-card p-4">
+          <h5 id="lessonFormTitle" data-i18n="teacher.newLesson">Новый урок</h5>
+          <form id="lessonForm">
+            <label class="form-label" data-i18n="teacher.titleRu">Заголовок (RU) *</label>
+            <input class="form-control mb-2" id="lessonTitleRu" required>
+
+            <label class="form-label" data-i18n="teacher.titleTg">Заголовок (TG)</label>
+            <input class="form-control mb-2" id="lessonTitleTg">
+
+            <label class="form-label" data-i18n="teacher.titleEn">Заголовок (EN)</label>
+            <input class="form-control mb-2" id="lessonTitleEn">
+
+            <label class="form-label" data-i18n="teacher.contentRu">Содержание (RU) *</label>
+            <textarea class="form-control mb-2" id="lessonContentRu" rows="4" required></textarea>
+
+            <label class="form-label" data-i18n="teacher.contentTg">Содержание (TG)</label>
+            <textarea class="form-control mb-2" id="lessonContentTg" rows="3"></textarea>
+
+            <label class="form-label" data-i18n="teacher.contentEn">Содержание (EN)</label>
+            <textarea class="form-control mb-2" id="lessonContentEn" rows="3"></textarea>
+
+            <div class="row g-2 mb-3">
+              <div class="col-7">
+                <label class="form-label" data-i18n="teacher.category">Категория</label>
+                <select class="form-select" id="lessonCategory">
+                  <option value="general">general</option>
+                  <option value="derivatives">derivatives</option>
+                  <option value="integrals">integrals</option>
+                  <option value="limits">limits</option>
+                </select>
+              </div>
+              <div class="col-5">
+                <label class="form-label" data-i18n="teacher.order">Порядок</label>
+                <input type="number" class="form-control" id="lessonOrder" value="0">
+              </div>
+            </div>
+
+            <label class="form-label" data-i18n="teacher.images">Изображения</label>
+            <input type="file" class="form-control mb-2" id="lessonImageFile" accept="image/*">
+            <div id="lessonImages" class="d-flex flex-wrap gap-2 mb-2"></div>
+
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="lessonPublishNow" checked>
+              <label class="form-check-label" for="lessonPublishNow" data-i18n="teacher.publishNow">Опубликовать и уведомить студентов</label>
+            </div>
+            <div class="d-flex gap-2 flex-wrap mb-2">
+              <button type="submit" class="btn btn-primary" data-i18n="teacher.saveLesson">Сохранить</button>
+              <button type="button" class="btn btn-outline-secondary d-none" id="lessonCancelEdit" data-i18n="teacher.cancel">Отмена</button>
+              <button type="button" class="btn btn-outline-info" id="lessonPreviewBtn" data-i18n="teacher.preview">Предпросмотр</button>
+              <button type="button" class="btn btn-warning d-none" id="lessonUnpublishBtn" data-i18n="teacher.unpublish">Снять</button>
+            </div>
+            <p class="small text-muted mb-0" data-i18n="teacher.publishHint">Без публикации урок не виден студентам и уведомление не отправляется.</p>
+          </form>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="glass-card p-4 mb-3 d-none" id="lessonPreviewBox">
+          <h5 data-i18n="teacher.previewStudent">Как видит студент</h5>
+          <div id="lessonPreviewContent"></div>
+        </div>
+        <div class="glass-card p-4">
+          <h5 data-i18n="teacher.myLessons">Мои уроки</h5>
+          <div id="lessonsList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Тесты -->
+  <div data-teacher-panel="tests" class="d-none">
+    <div class="row g-4">
+      <div class="col-lg-5">
+        <div class="glass-card p-4 mb-4">
+          <h5 id="testMetaTitle" data-i18n="teacher.newTest">Новый тест</h5>
+          <form id="testMetaForm">
+            <input class="form-control mb-2" id="testTitleRu" placeholder="Название RU *" required>
+            <input class="form-control mb-2" id="testTitleTg" placeholder="Название TG">
+            <input class="form-control mb-2" id="testTitleEn" placeholder="Title EN">
+            <textarea class="form-control mb-2" id="testDescRu" rows="2" placeholder="Описание"></textarea>
+            <select class="form-select mb-2" id="testCategory">
+              <option value="derivatives">derivatives</option>
+              <option value="integrals">integrals</option>
+              <option value="limits">limits</option>
+              <option value="general">general</option>
+            </select>
+            <label class="form-label" data-i18n="teacher.testClass">Класс (опционально)</label>
+            <select class="form-select mb-3" id="testClassId">
+              <option value="">— Все студенты —</option>
+            </select>
+            <button type="submit" class="btn btn-primary w-100 mb-2" data-i18n="teacher.saveTest">Сохранить тест</button>
+            <div class="d-flex gap-2 flex-wrap mb-2">
+              <button type="button" class="btn btn-outline-secondary" id="newTestBtn" data-i18n="teacher.newTestBtn">Новый</button>
+              <button type="button" class="btn btn-outline-info d-none" id="testDuplicateBtn" data-i18n="teacher.duplicate">Копия</button>
+              <button type="button" class="btn btn-success d-none" id="testPublishBtn" data-i18n="teacher.publish">Опубликовать</button>
+              <button type="button" class="btn btn-warning d-none" id="testUnpublishBtn" data-i18n="teacher.unpublish">Снять</button>
+            </div>
+          </form>
+          <hr>
+          <label class="form-label" data-i18n="teacher.importJson">Импорт JSON</label>
+          <textarea class="form-control mb-2 font-monospace small" id="testImportJson" rows="5" placeholder='{"title_ru":"...","questions":[...]}'></textarea>
+          <button type="button" class="btn btn-sm btn-outline-primary w-100" id="testImportBtn" data-i18n="teacher.importBtn">Импортировать</button>
+        </div>
+
+        <div class="glass-card p-4">
+          <label class="form-label" data-i18n="teacher.selectTest">Выберите тест</label>
+          <select class="form-select mb-3" id="testSelect"></select>
+        </div>
+      </div>
+
+      <div class="col-lg-7">
+        <div id="testEditor" class="d-none">
+          <div class="glass-card p-4 mb-4">
+            <h5 data-i18n="teacher.questionsList">Вопросы теста</h5>
+            <div id="questionsList"></div>
+          </div>
+
+          <div class="glass-card p-4">
+            <h5 data-i18n="teacher.addQuestion">Добавить вопрос</h5>
+            <form id="questionForm">
+              <input class="form-control mb-2" id="qTextRu" placeholder="Вопрос RU *" required>
+              <input class="form-control mb-2" id="qTextTg" placeholder="Вопрос TG">
+              <input class="form-control mb-2" id="qTextEn" placeholder="Question EN">
+
+              <label class="form-label small" data-i18n="teacher.answerOptions">Варианты ответа (по одному в строке)</label>
+              <input class="form-control mb-1 q-option-input" placeholder="Вариант 1">
+              <input class="form-control mb-1 q-option-input" placeholder="Вариант 2">
+              <input class="form-control mb-1 q-option-input" placeholder="Вариант 3">
+              <input class="form-control mb-2 q-option-input" placeholder="Вариант 4">
+
+              <div class="row g-2 mb-3">
+                <div class="col-6">
+                  <label class="form-label small" data-i18n="teacher.correctIndex">№ правильного (0, 1, 2…)</label>
+                  <input type="number" class="form-control" id="qCorrect" value="0" min="0">
+                </div>
+                <div class="col-6">
+                  <label class="form-label small" data-i18n="teacher.points">Баллы</label>
+                  <input type="number" class="form-control" id="qPoints" value="10" min="1">
+                </div>
+              </div>
+
+              <input class="form-control mb-3" id="qHint" placeholder="Подсказка">
+              <button type="submit" class="btn btn-primary w-100 mb-2" data-i18n="teacher.addQuestionBtn">Добавить вопрос</button>
+            </form>
+            <hr>
+            <h6 data-i18n="teacher.editQuestion">Редактировать вопрос</h6>
+            <select class="form-select mb-2" id="editQuestionSelect"></select>
+            <input class="form-control mb-2" id="editQTextRu" placeholder="Вопрос RU">
+            <input class="form-control mb-2" id="editQOptions" placeholder="Варианты через |">
+            <div class="row g-2 mb-2">
+              <div class="col-6"><input type="number" class="form-control" id="editQCorrect" placeholder="№ ответа"></div>
+              <div class="col-6"><input type="number" class="form-control" id="editQPoints" placeholder="Баллы"></div>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-primary w-100" id="saveQuestionEditBtn" data-i18n="teacher.saveQuestion">Сохранить вопрос</button>
+          </div>
+        </div>
+
+        <div class="glass-card p-4 mt-4">
+          <h5 data-i18n="teacher.myTests">Мои тесты</h5>
+          <div id="testsList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Классы -->
+  <div data-teacher-panel="classes" class="d-none">
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <div class="glass-card p-4">
+          <h5 data-i18n="teacher.classes">Классы</h5>
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" id="className" placeholder="Группа 101">
+            <button class="btn btn-primary" type="button" id="createClassBtn" data-i18n="teacher.createClass">Создать</button>
+          </div>
+          <div id="classesList"></div>
+          <hr>
+          <h6 data-i18n="teacher.enroll">Записать студента</h6>
+          <div class="row g-2">
+            <div class="col-4">
+              <input type="text" class="form-control" id="enrollClassId" placeholder="ID класса">
+            </div>
+            <div class="col-5">
+              <input type="text" class="form-control" id="enrollUsername" placeholder="username">
+            </div>
+            <div class="col-3">
+              <button class="btn btn-outline-primary w-100" type="button" id="enrollBtn" data-i18n="teacher.enrollBtn">OK</button>
+            </div>
+          </div>
+          <div id="classProgress" class="mt-3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}<script src="/static/js/teacher.js"></script>{% endblock %}

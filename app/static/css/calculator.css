@@ -1,0 +1,69 @@
+.calc-shell {
+  max-width: 100%;
+}
+
+.calc-display-wrap {
+  background: var(--gradient);
+  border-radius: 12px;
+  padding: 1.25rem 1rem;
+}
+
+.calc-display {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #fff;
+  text-align: right;
+  word-break: break-all;
+  min-height: 2.5rem;
+}
+
+.calc-expr-input {
+  font-family: ui-monospace, monospace;
+  font-size: 1.1rem;
+}
+
+.calc-key,
+.calc-key-fn {
+  width: 100%;
+  padding: 0.65rem 0.25rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  border-radius: 8px;
+}
+
+.calc-key:hover,
+.calc-key-fn:hover {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: var(--primary);
+}
+
+.calc-key-fn {
+  font-size: 0.85rem;
+}
+
+.calc-result-area {
+  min-height: 80px;
+}
+
+.calc-result-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-align: center;
+}
+
+.calc-mini-chart {
+  height: 220px;
+}
+
+.calc-history-list {
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.calc-history-item {
+  font-size: 0.85rem;
+  cursor: pointer;
+}

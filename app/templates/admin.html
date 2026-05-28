@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h2 class="mb-4" data-i18n="admin.title">Панель администратора</h2>
+  <div class="row g-4 mb-4" id="statsRow"></div>
+  <ul class="nav nav-tabs mb-3">
+    <li class="nav-item"><button class="nav-link active" data-tab="users" data-i18n="admin.users">Пользователи</button></li>
+    <li class="nav-item"><button class="nav-link" data-tab="lessons" data-i18n="learning.lessons">Уроки</button></li>
+    <li class="nav-item"><button class="nav-link" data-tab="tests" data-i18n="learning.tests">Тесты</button></li>
+  </ul>
+  <div id="tabUsers" class="glass-card p-4">
+    <div class="table-responsive">
+      <table class="table table-hover" id="usersTable">
+        <thead><tr><th>ID</th><th>User</th><th>Role</th><th>Active</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+  <div id="tabLessons" class="glass-card p-4 d-none">
+    <div id="lessonsAdmin"></div>
+  </div>
+  <div id="tabTests" class="glass-card p-4 d-none">
+    <div id="testsAdmin"></div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  if (!Auth.token || Auth.user?.role !== 'admin') { location.href = '/login'; return; }
+
+  document.querySelectorAll('.nav-link[data-tab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.nav-link[data-tab]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      ['Users','Lessons','Tests'].forEach(t => {
+        document.getElementById('tab' + t).classList.toggle('d-none', btn.dataset.tab !== t.toLowerCase());
+      });
+    });
+  });
+
+  const stats = await API.get('/api/admin/statistics');
+  document.getElementById('statsRow').innerHTML = `
+    <div class="col-4 col-md-2"><div class="glass-card admin-stat p-3 text-center"><div class="stat-value">${stats.users_count}</div><small>Users</small></div></div>
+    <div class="col-4 col-md-2"><div class="glass-card admin-stat p-3 text-center"><div class="stat-value">${stats.lessons_count}</div><small>Lessons</small></div></div>
+    <div class="col-4 col-md-2"><div class="glass-card admin-stat p-3 text-center"><div class="stat-value">${stats.tests_count}</div><small>Tests</small></div></div>
+    <div class="col-4 col-md-2"><div class="glass-card admin-stat p-3 text-center"><div class="stat-value">${stats.calculations_count}</div><small>Calcs</small></div></div>
+    <div class="col-4 col-md-2"><div class="glass-card admin-stat p-3 text-center"><div class="stat-value">${Math.round(stats.avg_test_score)}</div><small>Avg</small></div></div>`;
+
+  const users = await API.get('/api/admin/users');
+  document.querySelector('#usersTable tbody').innerHTML = users.map(u => `
+    <tr>
+      <td>${u.id}</td><td>${u.username}</td>
+      <td><select class="form-select form-select-sm role-select" data-id="${u.id}">
+        ${['student','teacher','admin'].map(r => `<option value="${r}" ${r===u.role?'selected':''}>${r}</option>`).join('')}
+      </select></td>
+      <td><input type="checkbox" class="form-check-input active-check" data-id="${u.id}" ${u.is_active?'checked':''}></td>
+      <td></td>
+    </tr>`).join('');
+
+  document.querySelectorAll('.role-select').forEach(sel => {
+    sel.addEventListener('change', () => API.patch(`/api/admin/users/${sel.dataset.id}/role?role=${sel.value}`, {}));
+  });
+  document.querySelectorAll('.active-check').forEach(ch => {
+    ch.addEventListener('change', () => API.patch(`/api/admin/users/${ch.dataset.id}/active?active=${ch.checked}`, {}));
+  });
+
+  const lessons = await API.get('/api/admin/lessons');
+  document.getElementById('lessonsAdmin').innerHTML = lessons.map(l => `
+    <div class="border-bottom py-2 d-flex justify-content-between">
+      <span>${l.title_ru}</span>
+      <button class="btn btn-sm btn-outline-danger" data-del-lesson="${l.id}">×</button>
+    </div>`).join('');
+  document.querySelectorAll('[data-del-lesson]').forEach(btn => {
+    btn.addEventListener('click', async () => { await API.delete(`/api/admin/lessons/${btn.dataset.delLesson}`); location.reload(); });
+  });
+
+  const tests = await API.get('/api/admin/tests');
+  document.getElementById('testsAdmin').innerHTML = tests.map(t => `
+    <div class="border-bottom py-2 d-flex justify-content-between">
+      <span>${t.title_ru} (${t.question_count} q)</span>
+      <button class="btn btn-sm btn-outline-danger" data-del-test="${t.id}">×</button>
+    </div>`).join('');
+  document.querySelectorAll('[data-del-test]').forEach(btn => {
+    btn.addEventListener('click', async () => { await API.delete(`/api/admin/tests/${btn.dataset.delTest}`); location.reload(); });
+  });
+});
+</script>
+{% endblock %}

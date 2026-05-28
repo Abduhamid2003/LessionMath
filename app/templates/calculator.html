@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block extra_head %}
+<link href="/static/css/calculator.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<div class="container">
+  <h2 class="mb-4" data-i18n="calculator.title">Научный калькулятор</h2>
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="glass-card calc-shell p-4">
+        <div class="calc-display-wrap mb-3">
+          <div class="calc-display" id="calcDisplay">0</div>
+        </div>
+
+        <div class="btn-group w-100 mb-3 calc-mode-tabs">
+          <button type="button" class="btn btn-sm btn-primary active" data-calc-mode="numeric" data-i18n="calculator.modeNumeric">Числа</button>
+          <button type="button" class="btn btn-sm btn-outline-primary" data-calc-mode="function" data-i18n="calculator.modeFunction">f(x)</button>
+          <button type="button" class="btn btn-sm btn-outline-primary" data-calc-mode="derivative" data-i18n="calculator.modeDerivative">f′(x)</button>
+        </div>
+
+        <input type="text" class="form-control calc-expr-input mb-2" id="calcExprInput" placeholder="2*pi + sqrt(16)" autocomplete="off">
+        <div id="formulaPad" class="formula-pad mb-3"></div>
+
+        <div data-calc-panel="numeric" class="calc-panel">
+          <p class="small text-muted mb-2" data-i18n="calculator.numericHint">Поддерживаются pi, e, sin, cos, sqrt, **</p>
+        </div>
+        <div data-calc-panel="function" class="calc-panel d-none"></div>
+        <div data-calc-panel="derivative" class="calc-panel d-none"></div>
+        <div id="calcXRow" class="d-none mb-2">
+          <label class="form-label">x =</label>
+          <input type="number" class="form-control" id="calcX" value="0" step="any">
+        </div>
+
+        <div class="calc-keypad mb-3">
+          <div class="row g-1">
+            <div class="col-3"><button type="button" class="btn calc-key" data-calc-key="7">7</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key" data-calc-key="8">8</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key" data-calc-key="9">9</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key" data-calc-key="/">÷</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key" data-calc-key="4">4</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key" data-calc-key="5">5</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key" data-calc-key="6">6</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key" data-calc-key="*">×</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key" data-calc-key="1">1</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key" data-calc-key="2">2</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key" data-calc-key="3">3</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key" data-calc-key="-">−</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key" data-calc-key="0">0</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key" data-calc-key=".">.</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key" data-calc-key="(">(</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key" data-calc-key="+">+</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key" data-calc-key=")**2">x²</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key" data-calc-key=")**3">x³</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key" data-calc-key=")">)</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key-fn" data-calc-key="sin(">sin</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key-fn" data-calc-key="cos(">cos</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key-fn" data-calc-key="tan(">tan</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key-fn" data-calc-key="sqrt(">√</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key-fn" data-calc-key="log(">log</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key-fn" data-calc-key="pi">π</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key-fn" data-calc-key="e">e</button></div>
+            <div class="col-3"><button type="button" class="btn calc-key-fn" data-calc-key="x">x</button></div>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-outline-secondary" id="calcClear" data-i18n="calculator.clear">C</button>
+          <button type="button" class="btn btn-outline-secondary" id="calcBackspace">⌫</button>
+          <button type="button" class="btn btn-primary flex-fill" id="calcEvaluate" data-i18n="calculator.evaluate">Вычислить</button>
+        </div>
+
+        <div id="calcResult" class="calc-result-area mt-4"></div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="glass-card p-3">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6 class="mb-0" data-i18n="calculator.history">История</h6>
+          <button type="button" class="btn btn-sm btn-link" id="calcClearHistory" data-i18n="calculator.clearHistory">Очистить</button>
+        </div>
+        <div class="list-group list-group-flush calc-history-list" id="calcHistory"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}<script src="/static/js/calculator.js"></script>{% endblock %}

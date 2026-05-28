@@ -1,0 +1,17 @@
+{
+  "name": "Calculus Visual Learning",
+  "short_name": "Calculus",
+  "description": "Интерактивная система визуального изучения производных и интегралов",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f0f4ff",
+  "theme_color": "#6366f1",
+  "icons": [
+    {
+      "src": "/static/img/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block extra_head %}<link href="/static/css/chat.css" rel="stylesheet">{% endblock %}
+{% block content %}
+<div class="container-fluid px-2 px-md-3">
+  <h2 class="mb-3" data-i18n="chat.title">Чаты</h2>
+  <div class="row g-3 chat-layout">
+    <div class="col-lg-4">
+      <div class="glass-card p-3 h-100">
+        <h6 class="mb-2" data-i18n="chat.newDialog">Новый диалог</h6>
+        <div class="input-group input-group-sm mb-2">
+          <span class="input-group-text"><i class="bi bi-search"></i></span>
+          <input type="search" class="form-control" id="contactSearch" data-i18n="chat.searchPlaceholder" placeholder="Имя или логин...">
+        </div>
+        <div id="contactsList" class="chat-contacts-list mb-3"></div>
+        <h6 class="mb-2" data-i18n="chat.rooms">Комнаты</h6>
+        <div id="roomsList" class="chat-rooms-list"></div>
+      </div>
+    </div>
+    <div class="col-lg-8">
+      <div class="glass-card p-0 chat-panel d-flex flex-column">
+        <div class="chat-header p-3 border-bottom">
+          <h6 class="mb-1" id="chatRoomTitle">—</h6>
+          <div id="onlineUsers" class="small text-muted"></div>
+        </div>
+        <div id="messagesBox" class="chat-messages flex-grow-1 p-3"></div>
+        <form id="chatForm" class="p-3 border-top d-flex gap-2">
+          <input type="text" class="form-control" id="chatInput" placeholder="Сообщение..." autocomplete="off" disabled>
+          <button type="submit" class="btn btn-primary" disabled id="chatSendBtn"><i class="bi bi-send"></i></button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}<script src="/static/js/chat.js"></script>{% endblock %}

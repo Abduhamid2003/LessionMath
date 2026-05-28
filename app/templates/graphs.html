@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block extra_head %}<link href="/static/css/module-pages.css" rel="stylesheet">{% endblock %}
+{% block content %}
+<div class="container module-layout">
+  <div class="module-hero" data-aos="fade-up">
+    <h2 data-i18n="graphs.title">Модуль визуализации графиков</h2>
+    <p data-i18n="graphs.intro">График показывает, как меняется функция. Это основа анализа, физики и экономики.</p>
+  </div>
+
+  <div class="info-grid" data-aos="fade-up">
+    <div class="info-card">
+      <h6 data-i18n="graphs.termTitle">Что такое функция?</h6>
+      <p class="small mb-0" data-i18n="graphs.termText">f(x) — правило: подаёте x, получаете y. На графике это кривая.</p>
+    </div>
+    <div class="info-card">
+      <h6 data-i18n="graphs.lifeTitle">Зачем в жизни?</h6>
+      <p class="small mb-0" data-i18n="graphs.lifeText">Прогноз цен, траектория движения, рост аудитории — всё это графики зависимостей.</p>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-8 order-chart">
+      <div class="glass-card p-4" data-aos="fade-left">
+        <div class="chart-container"><canvas id="mainChart"></canvas></div>
+        <div id="resultInfo"></div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="glass-card p-4" data-aos="fade-right">
+        <label class="form-label" data-i18n="graphs.expression">f(x) =</label>
+        <input type="text" class="form-control mb-2" id="expression" value="x**2">
+        <div id="formulaPad" class="formula-pad mb-3"></div>
+        <label class="form-label" data-i18n="graphs.expression2">Вторая функция</label>
+        <input type="text" class="form-control mb-3" id="expression2" placeholder="sin(x)">
+        <div class="row g-2 mb-3">
+          <div class="col-6"><label class="form-label" data-i18n="graphs.xmin">X мин</label><input type="number" class="form-control" id="xMin" value="-10"></div>
+          <div class="col-6"><label class="form-label" data-i18n="graphs.xmax">X макс</label><input type="number" class="form-control" id="xMax" value="10"></div>
+        </div>
+        <button class="btn btn-primary w-100 mb-2" id="plotBtn" data-i18n="graphs.plot">Построить</button>
+        <div class="d-flex gap-2 flex-wrap mb-3">
+          <button class="btn btn-outline-secondary btn-sm" id="saveBtn" data-i18n="common.save">Сохранить</button>
+          <button class="btn btn-outline-secondary btn-sm" id="exportBtn" data-i18n="common.exportPng">PNG</button>
+          <button class="btn btn-outline-secondary btn-sm" id="shareBtn" data-i18n="common.share">Ссылка</button>
+        </div>
+        <p class="small text-muted mb-2" data-i18n="graphs.examples">Примеры:</p>
+        <div class="example-chips">
+          <button class="btn btn-sm btn-outline-primary example-btn" data-expr="x**2">x²</button>
+          <button class="btn btn-sm btn-outline-primary example-btn" data-expr="sin(x)">sin(x)</button>
+          <button class="btn btn-sm btn-outline-primary example-btn" data-expr="cos(x)">cos(x)</button>
+          <button class="btn btn-sm btn-outline-primary example-btn" data-expr="x**3 - 4*x">x³−4x</button>
+          <button class="btn btn-sm btn-outline-primary example-btn" data-expr="exp(-x**2)">e^(−x²)</button>
+          <button class="btn btn-sm btn-outline-primary example-btn" data-expr="abs(x)">|x|</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}<script src="/static/js/graphs.js"></script>{% endblock %}

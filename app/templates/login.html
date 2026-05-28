@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-5">
+      <div class="glass-card p-4 mt-4" data-aos="fade-up">
+        <h3 class="text-center mb-4" data-i18n="login.title">Вход в систему</h3>
+        <form id="loginForm">
+          <div class="mb-3">
+            <label class="form-label" data-i18n="login.username">Имя пользователя</label>
+            <input type="text" class="form-control" id="username" required value="student">
+          </div>
+          <div class="mb-3">
+            <label class="form-label" data-i18n="login.password">Пароль</label>
+            <input type="password" class="form-control" id="password" required value="student123">
+          </div>
+          <button type="submit" class="btn btn-primary w-100" data-i18n="login.submit">Войти</button>
+        </form>
+        <p class="text-center mt-3">
+          <a href="/forgot-password" data-i18n="auth.forgot">Забыли пароль?</a>
+        </p>
+        <p class="text-center mt-2">
+          <span data-i18n="login.noaccount">Нет аккаунта?</span>
+          <a href="/register" data-i18n="login.register">Зарегистрироваться</a>
+        </p>
+        <div id="loginError" class="alert alert-danger d-none mt-2"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+document.getElementById('loginForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  try {
+    await Auth.login(document.getElementById('username').value, document.getElementById('password').value);
+    window.location.href = '/profile';
+  } catch (err) {
+    const el = document.getElementById('loginError');
+    el.textContent = err.message;
+    el.classList.remove('d-none');
+  }
+});
+</script>
+{% endblock %}

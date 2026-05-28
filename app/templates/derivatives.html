@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block extra_head %}<link href="/static/css/module-pages.css" rel="stylesheet">{% endblock %}
+{% block content %}
+<div class="container module-layout">
+  <div class="module-hero"><h2 data-i18n="derivatives.title">Производные</h2><p data-i18n="derivatives.intro">Производная — скорость изменения. Если график — путь, производная — ваша скорость в каждый момент.</p></div>
+  <div class="info-grid">
+    <div class="info-card"><h6 data-i18n="derivatives.termTitle">Термин</h6><p class="small mb-0" data-i18n="derivatives.termText">f′(x) показывает, растёт или убывает функция и насколько быстро.</p></div>
+    <div class="info-card"><h6 data-i18n="derivatives.lifeTitle">В жизни</h6><p class="small mb-0" data-i18n="derivatives.lifeText">Скорость авто, рост прибыли, чувствительность спроса к цене — это производные.</p></div>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-8 order-chart"><div class="glass-card p-4"><div class="chart-container"><canvas id="derivChart"></canvas></div></div></div>
+    <div class="col-lg-4">
+      <div class="glass-card p-4">
+        <label class="form-label" data-i18n="derivatives.expression">Функция</label>
+        <input type="text" class="form-control mb-2" id="expression" value="x**3 - 4*x">
+        <div id="formulaPad" class="formula-pad mb-3"></div>
+        <label class="form-label" data-i18n="derivatives.order">Порядок</label>
+        <input type="number" class="form-control mb-2" id="order" value="1" min="1" max="5">
+        <label class="form-label" data-i18n="derivatives.x0">x₀</label>
+        <input type="number" class="form-control mb-2" id="x0" value="1" step="0.1">
+        <input type="range" class="form-range mb-2" id="x0Anim" min="-3" max="3" step="0.1" value="1">
+        <button class="btn btn-primary w-100 mb-2" id="calcDerivBtn" data-i18n="derivatives.calculate">Производная</button>
+        <button class="btn btn-outline-primary w-100 mb-2" id="tangentBtn" data-i18n="derivatives.tangent">Касательная</button>
+        <div class="d-flex gap-2 mb-2"><button class="btn btn-sm btn-outline-success flex-fill" id="animStartBtn" data-i18n="derivatives.animStart">Анимация</button><button class="btn btn-sm btn-outline-danger flex-fill" id="animStopBtn" data-i18n="derivatives.animStop">Стоп</button></div>
+        <div id="derivResult"></div>
+        <p class="small text-muted mt-2" data-i18n="graphs.examples">Примеры:</p>
+        <div class="example-chips mb-3">
+          <button type="button" class="btn btn-sm btn-outline-primary example-btn" data-expr="x**2">x²</button>
+          <button type="button" class="btn btn-sm btn-outline-primary example-btn" data-expr="sin(x)">sin(x)</button>
+          <button type="button" class="btn btn-sm btn-outline-primary example-btn" data-expr="exp(x)">e^x</button>
+          <button type="button" class="btn btn-sm btn-outline-primary example-btn" data-expr="x**3-4*x">x³−4x</button>
+        </div>
+        <h6 data-i18n="derivatives.steps">Шаги</h6>
+        <div id="stepsBox" class="steps-box"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}<script src="/static/js/derivatives.js"></script>{% endblock %}

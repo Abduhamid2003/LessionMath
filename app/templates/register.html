@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-5">
+      <div class="glass-card p-4 mt-4" data-aos="fade-up">
+        <h3 class="text-center mb-4" data-i18n="register.title">Регистрация</h3>
+        <form id="registerForm">
+          <div class="mb-3">
+            <label class="form-label" data-i18n="register.email">Email</label>
+            <input type="email" class="form-control" id="email" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" data-i18n="login.username">Имя пользователя</label>
+            <input type="text" class="form-control" id="username" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" data-i18n="register.fullname">Полное имя</label>
+            <input type="text" class="form-control" id="fullName">
+          </div>
+          <div class="mb-3">
+            <label class="form-label" data-i18n="login.password">Пароль</label>
+            <input type="password" class="form-control" id="password" required minlength="6">
+          </div>
+          <button type="submit" class="btn btn-primary w-100" data-i18n="register.submit">Создать аккаунт</button>
+        </form>
+        <div id="regError" class="alert alert-danger d-none mt-2"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+document.getElementById('registerForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  try {
+    await Auth.register({
+      email: document.getElementById('email').value,
+      username: document.getElementById('username').value,
+      password: document.getElementById('password').value,
+      full_name: document.getElementById('fullName').value,
+    });
+    window.location.href = '/profile';
+  } catch (err) {
+    const el = document.getElementById('regError');
+    el.textContent = err.message;
+    el.classList.remove('d-none');
+  }
+});
+</script>
+{% endblock %}

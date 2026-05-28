@@ -1,0 +1,91 @@
+.chat-layout {
+  min-height: calc(100vh - 180px);
+}
+
+.chat-panel {
+  min-height: 420px;
+  max-height: calc(100vh - 200px);
+}
+
+.chat-messages {
+  overflow-y: auto;
+  min-height: 280px;
+  max-height: calc(100vh - 320px);
+}
+
+.chat-contacts-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.chat-contact-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.5rem 0.65rem;
+  margin-bottom: 0.4rem;
+  background: var(--bg-card);
+  cursor: pointer;
+}
+
+.chat-contact-item:hover {
+  border-color: var(--primary);
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.chat-rooms-list {
+  max-height: calc(100vh - 420px);
+  overflow-y: auto;
+}
+
+.chat-room-item {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.65rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+.chat-room-item.active {
+  border-color: var(--primary);
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.chat-bubble {
+  max-width: 85%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 14px;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.chat-bubble.mine {
+  margin-left: auto;
+  background: var(--primary);
+  color: #fff;
+}
+
+.chat-bubble.other {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+}
+
+.online-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 4px;
+}
+
+.online-dot.on { background: #22c55e; }
+.online-dot.off { background: #94a3b8; }
+
+@media (max-width: 991px) {
+  .chat-panel {
+    min-height: 360px;
+    max-height: 65vh;
+  }
+}
